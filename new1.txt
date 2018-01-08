@@ -1,0 +1,112 @@
+@echo off
+rem this is nodify
+
+echo hello world
+echo.|time
+
+rem value|options 就是自答式输入输出,先执行options，再输入value
+:: echo y|del c:\Users\random\desktop\2h.txt
+rem echo后面接的内容带有 a>b(address)，意思是把a内容写入b路径下的文件里  >>是追加的意思  
+::echo hello hhhh>c:\Users\random\desktop\2h.txt
+rem type为显示指定文件的内容
+type c:\Users\random\desktop\2h.txt
+
+rem %errorlevel%为查看前一个命令执行状态，返回0为正常
+echo %errorlevel%
+
+adb version
+rem 设置默认的控制台的背景色，空值还原，背景前景两个值在一起输入（0E黑黄，78白灰，7c白红，0f黑白）
+color 0e
+rem title是改变窗口的名称
+title [content]
+rem mode配置系统设备
+rem`
+串行口:
+MODE COMm[:] [BAUD=b] [PARITY=p] [DATA=d] [STOP=s]
+             [to=on|off] [xon=on|off] [odsr=on|off]
+             [octs=on|off] [dtr=on|off|hs]
+             [rts=on|off|hs|tg] [idsr=on|off]
+设备状态:       MODE [device] [/STATUS]
+打印重定向:　　 MODE LPTn[:]=COMm[:]
+选定代码页:　　 MODE CON[:] CP SELECT=yyy
+代码页状态:　　 MODE CON[:] CP [/STATUS]
+显示模式:　　   MODE CON[:] [COLS=c] [LINES=n]
+击键率:　       MODE CON[:] [RATE=r DELAY=d]
+
+rem 设置dos窗口大小为15行113列，颜色黑黄
+mode con cols=113 line=15 & color 0e
+rem^find一般与type配合使用，如type 文件 |find "string"
+FIND [/V] [/C] [/N] [/I] [/OFF[LINE]] "string" [[drive:][path]filename[ ...]]
+   /V        显示所有未包含指定字符串的行。
+   /C        仅显示包含字符串的行数。
+   /N        显示行号。
+   /I        搜索字符串时忽略大小写。
+   /OFF[LINE] 不要跳过具有脱机属性集的文件。
+   "string"   指定要搜索的文字串，
+   [drive:][path]filename  指定要搜索的文件
+::start批处理中调用外部程序的命令
+start explorer d:\
+   
+assoc：文件类型 ftype：执行程序  eg:assoc.txt ftype.txtfile  
+
+::call 调用另一个批处理文件 call 调用的路径
+
+rem if语句的使用
+if [not] {string1}=={string2} command 
+if [not] exist filename command (EXIST filename 为文件或目录存在的意思)
+
+if errorlevel 1 goto 1  如果执行为错误1，则跳到1
+if errorlevel 0 goto 0  如果执行为通过0，则跳到0
+rem 上面两个位置不能换掉，否则无法判断报错
+:0
+echo 执行成功
+goto exit
+
+:1
+echo 执行失败
+goto exit
+
+:exit
+rem 退出cmd
+pause
+
+启动延迟变量命令：setlocal enabledelayedexpansion
+之后对应的变量由%改为!
+
+
+::pause >nul
+REM  pause默认提示“请按任意键继续， >nul 则是输出空提示，nul改成其他内容，则当是输出内容，会退出
+
+&&：第一个命令失效了，后面的就都不会运行  ||：前面的失效了，才执行后面的  
+
+rem dir为查看文件夹内容
+dir c:\;d:\ >>a.txt 与dir c:\a >a.txt&d:|a.txt  同意思
+dir c:\>a.txt && d:\>>a.txt
+,可以当空格使用，如 dir,c:\=dir c:\  同意思
+
+rem for使用
+for %%variable in (set) do command[command-parameters]
+%%variable  指定一个单一字母表示可替换的参数。
+  (set)      指定一个或一组文件。可以使用通配符。
+  command    指定对每个文件执行的命令。
+  command-parameters
+             为特定命令指定参数或命令行开关
+
+			 
+ftp使用功能：
+
+ftp  -n -s:[[drive:]path]filename
+
+上面的filename为ftp命令文件，包括登录IP地址，用户名、密码、操作命令等
+例：
+open 90.52.8.3   ＃打开ip
+user iware       ＃用户为iware
+password8848    ＃密码
+bin             ＃二进制传输模式
+prompt
+cd tmp1         ＃切换至iware用户下的tmp1目录
+pwd
+lcd d:\download   ＃本地目录
+mget *          ＃下载tmp1目录下的所有文件
+bye             ＃退出ftp			 
+			 
